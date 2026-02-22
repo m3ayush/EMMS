@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brutal-bg: #FFF8E7;
+  --color-brutal-primary: #FFD700;
+  --color-brutal-pink: #FF6B9D;
+  --color-brutal-blue: #4ECDC4;
+  --color-brutal-green: #7BC67E;
+  --color-brutal-purple: #A78BFA;
+  --color-brutal-orange: #FF8C42;
+}
