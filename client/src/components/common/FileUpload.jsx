@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../config/firebase';
+import api from '../../hooks/useApi';
 
-export default function FileUpload({ storagePath, onUploadComplete, accept = '.pdf', maxSizeMB = 10 }) {
+export default function FileUpload({ onUploadComplete, accept = '.pdf', maxSizeMB = 10 }) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
   const [fileName, setFileName] = useState('');
 
-  const handleUpload = (e) => {
+  const handleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -21,27 +20,26 @@ export default function FileUpload({ storagePath, onUploadComplete, accept = '.p
     setFileName(file.name);
     setUploading(true);
 
-    const path = `${storagePath}/${Date.now()}-${file.name}`;
-    const storageRef = ref(storage, path);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
 
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        setProgress(pct);
-      },
-      (err) => {
-        setError('Upload failed. Please try again.');
-        setUploading(false);
-        console.error(err);
-      },
-      async () => {
-        const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-        setUploading(false);
-        onUploadComplete({ downloadUrl, storagePath: path });
-      }
-    );
+      const { data } = await api.post('/uploads/file', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (event) => {
+          if (event.lengthComputable) {
+            setProgress(Math.round((event.loaded / event.total) * 100));
+          }
+        },
+      });
+
+      setUploading(false);
+      onUploadComplete({ downloadUrl: data.data.url, storagePath: data.data.path });
+    } catch (err) {
+      setError('Upload failed. Please try again.');
+      setUploading(false);
+      console.error(err);
+    }
   };
 
   return (

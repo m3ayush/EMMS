@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../hooks/useApi';
 import FileUpload from '../common/FileUpload';
 import { useAuth } from '../../contexts/AuthContext';
+import { ORG_TYPES } from '../../utils/constants';
 
 export default function MouForm({ initialData, onSubmit, submitLabel = 'Submit MoU' }) {
   const { currentUser } = useAuth();
@@ -19,6 +20,9 @@ export default function MouForm({ initialData, onSubmit, submitLabel = 'Submit M
   const [orgSearch, setOrgSearch] = useState('');
   const [orgResults, setOrgResults] = useState([]);
   const [selectedOrg, setSelectedOrg] = useState(null);
+  const [showCreateOrg, setShowCreateOrg] = useState(false);
+  const [newOrgType, setNewOrgType] = useState('');
+  const [creatingOrg, setCreatingOrg] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -46,6 +50,20 @@ export default function MouForm({ initialData, onSubmit, submitLabel = 'Submit M
     setForm({ ...form, organisation: org._id });
     setOrgSearch('');
     setOrgResults([]);
+    setShowCreateOrg(false);
+  };
+
+  const handleCreateOrg = async () => {
+    if (!orgSearch.trim() || !newOrgType) return;
+    setCreatingOrg(true);
+    try {
+      const res = await api.post('/organisations', { name: orgSearch.trim(), type: newOrgType });
+      handleOrgSelect(res.data.data);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to create organisation.');
+    } finally {
+      setCreatingOrg(false);
+    }
   };
 
   const handleUploadComplete = ({ downloadUrl, storagePath }) => {
@@ -93,18 +111,36 @@ export default function MouForm({ initialData, onSubmit, submitLabel = 'Submit M
           </div>
         ) : (
           <>
-            <input type="text" placeholder="Search organisations..." value={orgSearch}
-              onChange={(e) => setOrgSearch(e.target.value)}
+            <input type="text" placeholder="Search or type new organisation name..." value={orgSearch}
+              onChange={(e) => { setOrgSearch(e.target.value); setShowCreateOrg(false); }}
               className="mt-1 block w-full rounded-md border-2 border-black px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-brutal-primary focus:outline-none bg-white" />
-            {orgResults.length > 0 && (
+            {orgSearch.length >= 2 && (
               <ul className="absolute z-10 mt-1 w-full bg-white border-2 border-black rounded-md shadow-[4px_4px_0px_0px_black] max-h-48 overflow-y-auto">
                 {orgResults.map((org) => (
                   <li key={org._id} onClick={() => handleOrgSelect(org)}
-                    className="px-3 py-2 text-sm font-medium hover:bg-brutal-primary cursor-pointer border-b-2 border-black/10 last:border-b-0">
+                    className="px-3 py-2 text-sm font-medium hover:bg-brutal-primary cursor-pointer border-b-2 border-black/10">
                     {org.name} <span className="text-gray-600 text-xs font-bold capitalize">({org.type})</span>
                   </li>
                 ))}
+                <li onClick={() => setShowCreateOrg(true)}
+                  className="px-3 py-2 text-sm font-bold text-black hover:bg-brutal-green cursor-pointer bg-green-50">
+                  + Create &quot;{orgSearch.trim()}&quot; as new organisation
+                </li>
               </ul>
+            )}
+            {showCreateOrg && (
+              <div className="mt-2 p-3 bg-green-50 border-2 border-black rounded-md">
+                <p className="text-sm font-bold text-black mb-2">Create: {orgSearch.trim()}</p>
+                <select value={newOrgType} onChange={(e) => setNewOrgType(e.target.value)}
+                  className="block w-full rounded-md border-2 border-black px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-brutal-primary focus:outline-none bg-white">
+                  <option value="">Select type</option>
+                  {ORG_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                </select>
+                <button type="button" onClick={handleCreateOrg} disabled={!newOrgType || creatingOrg}
+                  className="mt-2 w-full bg-brutal-green text-black py-2 px-4 rounded-md text-sm font-bold border-2 border-black shadow-[3px_3px_0px_0px_black] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-50 transition-all">
+                  {creatingOrg ? 'Creating...' : 'Create Organisation'}
+                </button>
+              </div>
             )}
           </>
         )}

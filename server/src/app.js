@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -7,6 +8,7 @@ const mouRoutes = require('./routes/mouRoutes');
 const orgRoutes = require('./routes/orgRoutes');
 const activityRoutes = require('./routes/activityRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.use('/api/mous', mouRoutes);
 app.use('/api/organisations', orgRoutes);
 app.use('/api/activities', activityRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/uploads/files', express.static(path.join(__dirname, '../uploads')));
+app.use('/api/uploads', uploadRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'EMMS API is running' });
