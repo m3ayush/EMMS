@@ -19,7 +19,7 @@ export default function SeniorDashboard() {
         ]);
         setStats(statsRes.data.data);
         setInactiveFaculty(inactiveRes.data.data);
-      } catch {} finally {
+      } catch { } finally {
         setLoading(false);
       }
     };

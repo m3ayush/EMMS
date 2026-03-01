@@ -13,6 +13,7 @@ import OrgSearchPage from './pages/faculty/OrgSearchPage';
 import SeniorDashboard from './pages/senior/SeniorDashboard';
 import OrgMouReviewPage from './pages/senior/OrgMouReviewPage';
 import FacultyDetailPage from './pages/senior/FacultyDetailPage';
+import AllFacultyPage from './pages/senior/AllFacultyPage';
 
 function AppRoutes() {
   const { currentUser, loading } = useAuth();
@@ -40,6 +41,7 @@ function AppRoutes() {
 
         {/* Senior Routes */}
         <Route path="/senior/dashboard" element={<ProtectedRoute><RoleRoute role="senior"><SeniorDashboard /></RoleRoute></ProtectedRoute>} />
+        <Route path="/senior/all-faculty" element={<ProtectedRoute><RoleRoute role="senior"><AllFacultyPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/senior/organisations" element={<ProtectedRoute><RoleRoute role="senior"><OrgMouReviewPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/senior/faculty/:id" element={<ProtectedRoute><RoleRoute role="senior"><FacultyDetailPage /></RoleRoute></ProtectedRoute>} />
 

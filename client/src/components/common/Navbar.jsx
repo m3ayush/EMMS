@@ -11,15 +11,16 @@ export default function Navbar() {
 
   const navLinks = isSenior
     ? [
-        { to: '/senior/dashboard', label: 'Dashboard' },
-        { to: '/senior/organisations', label: 'Organisation Review' },
-      ]
+      { to: '/senior/dashboard', label: 'Dashboard' },
+      { to: '/senior/all-faculty', label: 'Faculty' },
+      { to: '/senior/organisations', label: 'Organisation Review' },
+    ]
     : [
-        { to: '/faculty/dashboard', label: 'Dashboard' },
-        { to: '/faculty/submit-mou', label: 'Submit MoU' },
-        { to: '/faculty/mous', label: 'My MoUs' },
-        { to: '/faculty/organisations', label: 'Organisations' },
-      ];
+      { to: '/faculty/dashboard', label: 'Dashboard' },
+      { to: '/faculty/submit-mou', label: 'Submit MoU' },
+      { to: '/faculty/mous', label: 'My MoUs' },
+      { to: '/faculty/organisations', label: 'Organisations' },
+    ];
 
   return (
     <nav className="bg-brutal-primary border-b-3 border-black shadow-[0_4px_0px_0px_black]">
@@ -34,11 +35,10 @@ export default function Navbar() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`px-3 py-2 rounded-md text-sm font-bold transition-all ${
-                    location.pathname === link.to
-                      ? 'bg-black text-white'
-                      : 'text-black hover:bg-black/10'
-                  }`}
+                  className={`px-3 py-2 rounded-md text-sm font-bold transition-all ${location.pathname === link.to
+                    ? 'bg-black text-white'
+                    : 'text-black hover:bg-black/10'
+                    }`}
                 >
                   {link.label}
                 </Link>
@@ -66,11 +66,10 @@ export default function Navbar() {
             <Link
               key={link.to}
               to={link.to}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold whitespace-nowrap transition-all ${
-                location.pathname === link.to
-                  ? 'bg-black text-white'
-                  : 'text-black hover:bg-black/10'
-              }`}
+              className={`px-3 py-1.5 rounded-md text-xs font-bold whitespace-nowrap transition-all ${location.pathname === link.to
+                ? 'bg-black text-white'
+                : 'text-black hover:bg-black/10'
+                }`}
             >
               {link.label}
             </Link>
