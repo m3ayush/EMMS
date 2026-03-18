@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import api from '../../hooks/useApi';
 import MouCard from '../../components/mou/MouCard';
 import MouForm from '../../components/mou/MouForm';
@@ -11,13 +12,14 @@ import toast from 'react-hot-toast';
 
 export default function MouEditRenewalPage() {
   const { currentUser } = useAuth();
+  const [searchParams] = useSearchParams();
   const [mous, setMous] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingMou, setEditingMou] = useState(null);
   const [renewingMou, setRenewingMou] = useState(null);
   const [activitiesMou, setActivitiesMou] = useState(null);
   const [renewForm, setRenewForm] = useState({ newExpiryDate: '', signedCopyUrl: '', signedCopyPath: '' });
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState(searchParams.get('status') || '');
   const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchMous = async () => {
