@@ -10,6 +10,7 @@ import FacultyDashboard from './pages/faculty/FacultyDashboard';
 import MouSubmissionPage from './pages/faculty/MouSubmissionPage';
 import MouEditRenewalPage from './pages/faculty/MouEditRenewalPage';
 import OrgSearchPage from './pages/faculty/OrgSearchPage';
+import MouDetailPage from './pages/faculty/MouDetailPage';
 import SeniorDashboard from './pages/senior/SeniorDashboard';
 import OrgMouReviewPage from './pages/senior/OrgMouReviewPage';
 import FacultyDetailPage from './pages/senior/FacultyDetailPage';
@@ -37,6 +38,7 @@ function AppRoutes() {
         <Route path="/faculty/dashboard" element={<ProtectedRoute><RoleRoute role="faculty"><FacultyDashboard /></RoleRoute></ProtectedRoute>} />
         <Route path="/faculty/submit-mou" element={<ProtectedRoute><RoleRoute role="faculty"><MouSubmissionPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/faculty/mous" element={<ProtectedRoute><RoleRoute role="faculty"><MouEditRenewalPage /></RoleRoute></ProtectedRoute>} />
+        <Route path="/faculty/mous/:id" element={<ProtectedRoute><RoleRoute role="faculty"><MouDetailPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/faculty/organisations" element={<ProtectedRoute><RoleRoute role="faculty"><OrgSearchPage /></RoleRoute></ProtectedRoute>} />
 
         {/* Senior Routes */}

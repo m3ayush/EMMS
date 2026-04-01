@@ -1,14 +1,15 @@
+import { Link } from 'react-router-dom';
 import StatusBadge from '../common/StatusBadge';
 import { formatDate, daysUntil } from '../../utils/dateHelpers';
 
-export default function MouCard({ mou, onEdit, onRenew, onViewActivities, showFaculty = false }) {
+export default function MouCard({ mou, linkTo, showFaculty = false }) {
   const days = daysUntil(mou.expiryDate);
 
-  return (
+  const inner = (
     <div className="bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_black] p-5">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 flex-wrap gap-y-1">
             <h3 className="font-bold text-black">{mou.title}</h3>
             <StatusBadge status={mou.status} />
           </div>
@@ -17,8 +18,9 @@ export default function MouCard({ mou, onEdit, onRenew, onViewActivities, showFa
             <p className="text-xs text-gray-500 font-medium mt-0.5">Faculty: {mou.faculty.name} ({mou.faculty.department})</p>
           )}
         </div>
-        {mou.signedCopyUrl && (
+        {mou.signedCopyUrl && !linkTo && (
           <a href={mou.signedCopyUrl} target="_blank" rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
             className="text-xs font-bold text-black bg-brutal-blue px-2 py-1 rounded-md border-2 border-black hover:translate-x-0.5 hover:translate-y-0.5 transition-all">View PDF</a>
         )}
       </div>
@@ -44,17 +46,19 @@ export default function MouCard({ mou, onEdit, onRenew, onViewActivities, showFa
         <p className="text-sm text-gray-600 mt-3 line-clamp-2">{mou.description}</p>
       )}
 
-      <div className="mt-4 flex space-x-2">
-        {onEdit && mou.status === 'active' && (
-          <button onClick={() => onEdit(mou)} className="text-xs px-3 py-1.5 rounded-md bg-white text-black font-bold border-2 border-black shadow-[3px_3px_0px_0px_black] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">Edit</button>
-        )}
-        {onRenew && (mou.status === 'active' || mou.status === 'expired') && (
-          <button onClick={() => onRenew(mou)} className="text-xs px-3 py-1.5 rounded-md bg-brutal-blue text-black font-bold border-2 border-black shadow-[3px_3px_0px_0px_black] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">Renew</button>
-        )}
-        {onViewActivities && (
-          <button onClick={() => onViewActivities(mou)} className="text-xs px-3 py-1.5 rounded-md bg-brutal-green text-black font-bold border-2 border-black shadow-[3px_3px_0px_0px_black] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">Activities</button>
-        )}
-      </div>
+      {linkTo && (
+        <p className="text-xs font-bold text-gray-400 mt-3">Click to view details →</p>
+      )}
     </div>
   );
+
+  if (linkTo) {
+    return (
+      <Link to={linkTo} className="block hover:translate-x-0.5 hover:translate-y-0.5 transition-transform">
+        {inner}
+      </Link>
+    );
+  }
+
+  return inner;
 }

@@ -96,7 +96,7 @@ export default function RegisterPage() {
             <select name="role" value={form.role} onChange={handleChange}
               className="mt-1 block w-full rounded-md border-2 border-black px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-brutal-primary focus:outline-none bg-white">
               <option value="faculty">Faculty</option>
-              <option value="senior">Senior Faculty</option>
+              <option value="senior">Management</option>
             </select>
           </div>
           <div>

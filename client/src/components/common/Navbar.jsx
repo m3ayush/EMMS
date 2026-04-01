@@ -48,8 +48,8 @@ export default function Navbar() {
           <div className="flex items-center space-x-4">
             <div className="text-sm text-black">
               <span className="font-bold">{currentUser.name}</span>
-              <span className="ml-1 text-xs px-2 py-0.5 rounded-md bg-black text-white font-bold capitalize">
-                {currentUser.role}
+              <span className="ml-1 text-xs px-2 py-0.5 rounded-md bg-black text-white font-bold">
+                {currentUser.role === 'senior' ? 'Management' : 'Faculty'}
               </span>
             </div>
             <button
